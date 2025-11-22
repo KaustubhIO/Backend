@@ -20,7 +20,9 @@ app.get("/", (req, res) => {
 app.post("/analyze", async (req, res) => {
   try {
     const product = req.body?.productData;
-    if (!product) return res.status(400).json({ error: "Missing productData" });
+    if (!product) {
+      return res.status(400).json({ error: "Missing productData" });
+    }
 
     const prompt = `
 Return only valid JSON in this exact format:
@@ -47,17 +49,15 @@ ${JSON.stringify(product)}
       body: JSON.stringify({
         model: MODEL,
         messages: [
-          { role: "system", content: "Always return ONLY valid JSON." },
+          { role: "system", content: "Always return ONLY valid JSON, no extra text." },
           { role: "user", content: prompt }
         ]
       })
     });
 
     if (!response.ok) {
-      return res.status(500).json({
-        error: "Model API error",
-        details: await response.text()
-      });
+      const txt = await response.text();
+      return res.status(500).json({ error: "Model API error", details: txt });
     }
 
     const data = await response.json();
