@@ -76,7 +76,12 @@ ${JSON.stringify(product)}
     res.status(500).json({ error: err.message });
   }
 });
+git add server.js
+git commit -m "Improve TruthBuy scoring prompt and normalization"
+git push
+
 
 app.listen(PORT, () => {
   console.log(`TruthBuy backend running on port ${PORT}`);
 });
+
